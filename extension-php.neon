@@ -1,0 +1,36 @@
+parameters:
+	rdx_php:
+		errorSuppressionEnabled: true
+		errorSuppressionAllowFunctionCall: true
+
+services:
+	-
+		class: rdx\PhpstanExtra\Php\ClassConstantVisibilityRule
+		tags: [phpstan.rules.rule]
+	-
+		class: rdx\PhpstanExtra\Php\ClassMethodVisibilityRule
+		tags: [phpstan.rules.rule]
+
+	-
+		class: rdx\PhpstanExtra\Php\ErrorSuppressionRule
+		arguments:
+			enabled: %rdx_php.errorSuppressionEnabled%
+			allowFunctionCall: %rdx_php.errorSuppressionAllowFunctionCall%
+		tags: [phpstan.rules.rule]
+
+	-
+		class: rdx\PhpstanExtra\Php\ImplicitlyNullParametersRule
+		tags: [phpstan.rules.rule]
+
+	-
+		class: rdx\PhpstanExtra\Php\RoundReturnTypeExtension
+		tags: [phpstan.broker.expressionTypeResolverExtension]
+
+	errorFormatter.byfile:
+		class: rdx\PhpstanExtra\Php\ByFileErrorFormatter
+
+parametersSchema:
+	rdx_php: structure([
+		errorSuppressionEnabled: bool()
+		errorSuppressionAllowFunctionCall: bool()
+	])

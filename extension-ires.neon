@@ -1,0 +1,38 @@
+parameters:
+	rdx_ires:
+		classMethodUsageEnabled: false
+		classMethodUsageAckCommand: 'ack %s --ignore-directory=vendor'
+		aroPropertiesSchemaDumpFile: '' # path/to/structure-dump.sql
+
+services:
+	-
+		class: rdx\PhpstanExtra\Ires\AroEagerExtension
+		tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]
+
+	-
+		class: Framework\Console\Commands\CompileModels\SchemaParser
+		arguments:
+			filepath: %rdx_ires.aroPropertiesSchemaDumpFile%
+	-
+		class: rdx\PhpstanExtra\Ires\AroPropertyExtension
+		tags: [phpstan.broker.propertiesClassReflectionExtension]
+
+	-
+		class: rdx\PhpstanExtra\Ires\ClassMethodDefinitionsCollector
+		tags: [phpstan.collector]
+	-
+		class: rdx\PhpstanExtra\Ires\ClassMethodCallsCollector
+		tags: [phpstan.collector]
+	-
+		class: rdx\PhpstanExtra\Ires\ClassMethodUsageRule
+		arguments:
+			enabled: %rdx_ires.classMethodUsageEnabled%
+			ackCommand: %rdx_ires.classMethodUsageAckCommand%
+		tags: [phpstan.rules.rule]
+
+parametersSchema:
+	rdx_ires: structure([
+		classMethodUsageEnabled: bool()
+		classMethodUsageAckCommand: string()
+		aroPropertiesSchemaDumpFile: string()
+	])

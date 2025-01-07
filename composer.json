@@ -1,0 +1,20 @@
+{
+    "name": "rdx/phpstan-extra",
+    "description": "More PhpStan extensions",
+    "keywords": ["dev"],
+    "type": "library",
+    "require": {
+        "phpstan/phpstan": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "rdx\\PhpstanExtra\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rudie Dirkx",
+            "email": "github@hotblocks.nl"
+        }
+    ]
+}

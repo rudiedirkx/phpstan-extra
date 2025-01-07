@@ -1,0 +1,39 @@
+parameters:
+	rdx_laravel:
+		controllerActionMaxLines: 50
+
+services:
+	-
+		class: rdx\PhpstanExtra\Laravel\AuthExtension
+		tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]
+
+	-
+		class: rdx\PhpstanExtra\Laravel\ConfigFunctionExtension
+		tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]
+	-
+		class: rdx\PhpstanExtra\Laravel\TransFunctionExtension
+		tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]
+
+	-
+		class: rdx\PhpstanExtra\Laravel\EloquentCollectionRelationExtension
+		tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+
+	-
+		class: rdx\PhpstanExtra\Laravel\ControllerActionSizeRule
+		tags: [phpstan.rules.rule]
+		arguments:
+			allowMaxLines: %rdx_laravel.controllerActionMaxLines%
+	-
+		class: rdx\PhpstanExtra\Laravel\ControllerViewCalledRule
+		tags: [phpstan.rules.rule]
+	-
+		class: rdx\PhpstanExtra\Laravel\ControllerViewParamsCollector
+		tags: [phpstan.collector]
+	-
+		class: rdx\PhpstanExtra\Laravel\ControllerViewParamsAggregateRule
+		tags: [phpstan.rules.rule]
+
+parametersSchema:
+	rdx_laravel: structure([
+		controllerActionMaxLines: int()
+	])
