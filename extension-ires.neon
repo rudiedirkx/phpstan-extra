@@ -10,6 +10,10 @@ services:
 		tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]
 
 	-
+		class: rdx\PhpstanExtra\Ires\AroOptionsExtension
+		tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]
+
+	-
 		class: Framework\Console\Commands\CompileModels\SchemaParser
 		arguments:
 			filepath: %rdx_ires.aroPropertiesSchemaDumpFile%
