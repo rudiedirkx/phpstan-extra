@@ -12,6 +12,9 @@ services:
 	-
 		class: rdx\PhpstanExtra\Ires\AroOptionsExtension
 		tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]
+	-
+		class: rdx\PhpstanExtra\Ires\AroKeyExtension
+		tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]
 
 	-
 		class: Framework\Console\Commands\CompileModels\SchemaParser
@@ -20,6 +23,9 @@ services:
 	-
 		class: rdx\PhpstanExtra\Ires\AroPropertyExtension
 		tags: [phpstan.broker.propertiesClassReflectionExtension]
+	-
+		class: rdx\PhpstanExtra\Ires\AroPropertyTypeNodeResolverExtension
+		tags: [phpstan.phpDoc.typeNodeResolverExtension]
 
 	-
 		class: rdx\PhpstanExtra\Ires\ClassMethodDefinitionsCollector

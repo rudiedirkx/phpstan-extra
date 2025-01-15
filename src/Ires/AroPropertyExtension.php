@@ -21,8 +21,8 @@ use Throwable;
 
 final class AroPropertyExtension implements PropertiesClassReflectionExtension {
 
-	private const DEBUG_CLASS = '';
-	private const DEBUG_PROPERTY = '';
+	private const DEBUG_CLASS = '-';
+	private const DEBUG_PROPERTY = '-';
 
 	/** @var array<class-string<ActiveRecordObject>, ActiveRecordObject> */
 	protected array $objects = [];
