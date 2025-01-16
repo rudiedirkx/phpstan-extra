@@ -22,6 +22,10 @@ final class ForeachByReferenceValueRule implements Rule {
 	}
 
 	public function processNode(Node $node, Scope $scope) : array {
+		if (!$this->enabled) {
+			return [];
+		}
+
 		if (!$node->byRef) {
 			return [];
 		}
