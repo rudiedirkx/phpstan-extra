@@ -2,20 +2,13 @@
 
 namespace rdx\PhpstanExtra\Ires;
 
-use Framework\Aro\ActiveRecordObject;
-use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\FuncCall;
 use PHPStan\Analyser\OutOfClassScope;
 use PHPStan\Analyser\Scope;
-use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Type\ArrayType;
 use PHPStan\Type\DynamicFunctionReturnTypeExtension;
-use PHPStan\Type\MixedType;
-use PHPStan\Type\ObjectType;
-use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
-use PHPStan\Type\TypeCombinator;
 
 final class AroKeyExtension implements DynamicFunctionReturnTypeExtension {
 

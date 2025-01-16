@@ -8,9 +8,6 @@ use PHPStan\PhpDoc\TypeNodeResolverExtension;
 use PHPStan\PhpDocParser\Ast\Type\GenericTypeNode;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use PHPStan\Type\ErrorType;
-use PHPStan\Type\NeverType;
-use PHPStan\Type\ObjectType;
-use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 
 final class AroPropertyTypeNodeResolverExtension implements TypeNodeResolverExtension {

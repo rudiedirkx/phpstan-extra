@@ -2,6 +2,7 @@ parameters:
 	rdx_php:
 		errorSuppressionEnabled: true
 		errorSuppressionAllowFunctionCall: true
+		foreachByReferenceValueEnabled: true
 
 services:
 	-
@@ -19,6 +20,12 @@ services:
 		tags: [phpstan.rules.rule]
 
 	-
+		class: rdx\PhpstanExtra\Php\ForeachByReferenceValueRule
+		arguments:
+			enabled: %rdx_php.foreachByReferenceValueEnabled%
+		tags: [phpstan.rules.rule]
+
+	-
 		class: rdx\PhpstanExtra\Php\ImplicitlyNullParametersRule
 		tags: [phpstan.rules.rule]
 
@@ -33,4 +40,5 @@ parametersSchema:
 	rdx_php: structure([
 		errorSuppressionEnabled: bool()
 		errorSuppressionAllowFunctionCall: bool()
+		foreachByReferenceValueEnabled: bool()
 	])
