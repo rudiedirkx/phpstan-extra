@@ -3,6 +3,7 @@ parameters:
 		errorSuppressionEnabled: true
 		errorSuppressionAllowFunctionCall: true
 		foreachByReferenceValueEnabled: true
+		staticFunctionVariablesEnabled: true
 
 services:
 	-
@@ -26,6 +27,12 @@ services:
 		tags: [phpstan.rules.rule]
 
 	-
+		class: rdx\PhpstanExtra\Php\StaticFunctionVariablesRule
+		arguments:
+			enabled: %rdx_php.staticFunctionVariablesEnabled%
+		tags: [phpstan.rules.rule]
+
+	-
 		class: rdx\PhpstanExtra\Php\ImplicitlyNullParametersRule
 		tags: [phpstan.rules.rule]
 
@@ -41,4 +48,5 @@ parametersSchema:
 		errorSuppressionEnabled: bool()
 		errorSuppressionAllowFunctionCall: bool()
 		foreachByReferenceValueEnabled: bool()
+		staticFunctionVariablesEnabled: bool()
 	])

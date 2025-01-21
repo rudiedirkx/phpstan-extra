@@ -16,6 +16,11 @@ $casters = [
 	'Illuminate\Contracts\Container\Container' => $removePropsIfNested,
 	'Illuminate\Routing\RouteCollection' => $removePropsIfNested,
 
+	// Behat
+	// 'Behat\Mink\Driver\CoreDriver' => $removePropsIfNested,
+	'Behat\Mink\Selector\SelectorsHandler' => $removePropsIfNested,
+	'Symfony\Component\BrowserKit\HttpBrowser' => $removePropsIfNested,
+
 	// PhpParser
 	'PhpParser\NodeAbstract' => function($obj, $out) : array {
 		unset($out[Caster::PREFIX_PROTECTED . 'attributes']['parent']);
