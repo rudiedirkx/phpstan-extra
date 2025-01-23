@@ -2,6 +2,7 @@ parameters:
 	rdx_php:
 		errorSuppressionEnabled: true
 		errorSuppressionAllowFunctionCall: true
+		unusedVariablesEnabled: true
 		foreachByReferenceValueEnabled: true
 		staticFunctionVariablesEnabled: true
 
@@ -18,6 +19,12 @@ services:
 		arguments:
 			enabled: %rdx_php.errorSuppressionEnabled%
 			allowFunctionCall: %rdx_php.errorSuppressionAllowFunctionCall%
+		tags: [phpstan.rules.rule]
+
+	-
+		class: rdx\PhpstanExtra\Php\UnusedVariablesRule
+		arguments:
+			enabled: %rdx_php.unusedVariablesEnabled%
 		tags: [phpstan.rules.rule]
 
 	-
@@ -47,6 +54,7 @@ parametersSchema:
 	rdx_php: structure([
 		errorSuppressionEnabled: bool()
 		errorSuppressionAllowFunctionCall: bool()
+		unusedVariablesEnabled: bool()
 		foreachByReferenceValueEnabled: bool()
 		staticFunctionVariablesEnabled: bool()
 	])
