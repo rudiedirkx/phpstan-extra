@@ -56,8 +56,8 @@ final class ClassMethodCallsCollector implements Collector {
 				return $this->maybeIgnoreName($node->name->name, 'call');
 			}
 			elseif ($node->name instanceof Variable) {
-				$varName = $node->name->name;
-				$var = $scope->getVariableType($varName);
+				// $varName = $node->name->name;
+				// $var = $scope->getVariableType($varName);
 				// dd($var);
 				return null;
 			}

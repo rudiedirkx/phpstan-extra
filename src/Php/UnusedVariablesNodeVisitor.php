@@ -21,6 +21,7 @@ use PhpParser\Node\Stmt\For_;
 use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\Global_;
 use PhpParser\Node\Stmt\While_;
+use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 
@@ -44,21 +45,21 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 		private bool $debug,
 	) {}
 
-	public function enterNode(Node $node) {
+	public function enterNode(Node $node) { // @phpstan-ignore return.unusedType
 		$this->depth++;
 		$this->line = $node->getStartLine();
 
 		// echo "\t\t - ", get_class($node), " (",  $this->line, ") - \n";
 
 		if (in_array($node, $this->skipVars)) {
-			return;
+			return null;
 		}
 
 		// Don't go into FunctionLike because they are their own scope
 		if ($node instanceof FunctionLike) {
 			// Except ArrowFunction, that doesn't have its own scope
 			if ($node instanceof ArrowFunction) {
-				return;
+				return null;
 			}
 
 			if ($node instanceof Closure) {
@@ -70,7 +71,7 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 				}
 			}
 
-			return NodeVisitor::DONT_TRAVERSE_CHILDREN;
+			return NodeTraverser::DONT_TRAVERSE_CHILDREN;
 		}
 
 		if ($node instanceof FuncCall && $node->name instanceof Name) {
@@ -85,12 +86,14 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 			if ($node->name->toLowerString() === 'get_defined_vars') {
 				$this->addEncounter(self::USE_ALL, 'all');
 			}
+			return null;
 		}
 
 		if ($node instanceof StaticVar) {
 			if ($varName = $this->getVarName($node->var)) {
 				$this->ignoreVarNames[] = $varName;
 			}
+			return null;
 		}
 
 		if ($node instanceof Global_) {
@@ -99,10 +102,12 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 					$this->ignoreVarNames[] = $varName;
 				}
 			}
+			return null;
 		}
 
 		if ($node instanceof For_ || $node instanceof While_) {
 			$this->loopDepth++;
+			return null;
 		}
 
 		if ($node instanceof Foreach_) {
@@ -114,18 +119,20 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 
 			$this->skipVars[] = $node->keyVar;
 			$this->skipVars[] = $node->valueVar;
-			return;
+			return null;
 		}
 
 		if ($node instanceof Assign) {
 			$this->skipVars[] = $node->var;
-			return;
+			return null;
 		}
 
 		if ($node instanceof Variable) {
 			$varName = $this->getVarName($node);
 			$this->addEncounter(self::USE, $varName);
 		}
+
+		return null;
 	}
 
 	public function leaveNode(Node $node) {
@@ -136,26 +143,38 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 			$this->skipVars[] = $node->var;
 			$varName = $this->getVarName($node->var);
 			$this->addEncounter(self::DEFINE, $varName);
-			return;
+			return null;
 		}
 
 		if ($node instanceof For_ || $node instanceof While_) {
 			$this->loopDepth--;
+			return null;
 		}
 
 		if ($node instanceof Foreach_) {
 			$this->loopDepth--;
 		}
+
+		return null;
 	}
 
+	/**
+	 * @return list<array{string, string, int}>
+	 */
 	public function getEncounters() : array {
 		return $this->encounters;
 	}
 
+	/**
+	 * @return list<string>
+	 */
 	public function getIgnoreVarNames() : array {
 		return $this->ignoreVarNames;
 	}
 
+	/**
+	 * @return list<string>
+	 */
 	public function getEncounterDebugs() : array {
 		return array_map(function(array $encounter) {
 			[$type, $varName, $line] = $encounter;
@@ -173,6 +192,9 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 		$this->encounters[] = [$type, $varName, $this->line];
 	}
 
+	/**
+	 * @return list<string>
+	 */
 	private function getCompactVarNames(FuncCall $node) : array {
 		$varNames = [];
 		foreach ($node->args as $arg) {

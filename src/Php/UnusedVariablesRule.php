@@ -13,19 +13,22 @@ use PHPStan\Rules\RuleErrorBuilder;
 
 // Alternative: https://github.com/Slamdunk/phpstan-extensions/blob/v1.2.0/lib/UnusedVariableRule.php
 
+/**
+ * @implements Rule<FunctionLike>
+ */
 final class UnusedVariablesRule implements Rule {
 
-	private const DEBUG = false;
-
 	private const IGNORE_VARS = [
-		'_SERVER',
-		'_REQUEST',
-		'_POST',
 		'_GET',
+		'_POST',
+		'_REQUEST',
+		'_SERVER',
+		'_SESSION',
 	];
 
 	public function __construct(
 		protected bool $enabled,
+		protected bool $debug = false,
 	) {}
 
 	public function getNodeType() : string {
@@ -38,7 +41,7 @@ final class UnusedVariablesRule implements Rule {
 			return [];
 		}
 
-		if (self::DEBUG) {
+		if ($this->debug) {
 			printf("\tLine % 4d  %s\n", $node->getStartLine(), get_class($node));
 // if (!in_array($node->getStartLine(), [191])) return [];
 		}
@@ -58,12 +61,12 @@ final class UnusedVariablesRule implements Rule {
 		}
 
 		$traverser = new NodeTraverser();
-		$traverser->addVisitor($visitor = new UnusedVariablesNodeVisitor(self::DEBUG));
+		$traverser->addVisitor($visitor = new UnusedVariablesNodeVisitor($this->debug));
 		$traverser->traverse($node->getStmts() ?? []);
 
 		$ignoreVarNames = array_merge($ignoreVarNames, $visitor->getIgnoreVarNames());
 
-		if (self::DEBUG) {
+		if ($this->debug) {
 			echo "\t\t" . implode("\n\t\t", $visitor->getEncounterDebugs()), "\n";
 		}
 
