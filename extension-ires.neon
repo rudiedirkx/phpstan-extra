@@ -28,6 +28,10 @@ services:
 		tags: [phpstan.phpDoc.typeNodeResolverExtension]
 
 	-
+		class: rdx\PhpstanExtra\Ires\RouteCallRule
+		tags: [phpstan.rules.rule]
+
+	-
 		class: rdx\PhpstanExtra\Ires\ClassMethodDefinitionsCollector
 		tags: [phpstan.collector]
 	-
