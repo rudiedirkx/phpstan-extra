@@ -22,7 +22,6 @@ use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\Global_;
 use PhpParser\Node\Stmt\While_;
 use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor;
 use PhpParser\NodeVisitorAbstract;
 
 final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {

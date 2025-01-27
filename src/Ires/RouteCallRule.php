@@ -3,51 +3,26 @@
 namespace rdx\PhpstanExtra\Ires;
 
 use App\Services\Http\AppController;
-use Framework\Http\Controller;
 use PhpParser\Node;
-use PhpParser\Node\Expr\StaticCall;
-use PhpParser\Node\Identifier;
-use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
 use PHPStan\Analyser\Scope;
-use PHPStan\File\RelativePathHelper;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
-use PHPStan\Type\ObjectType;
 use Throwable;
 
 /**
- * @implements Rule<StaticCall>
+ * @implements Rule<FuncCall>
  */
 final class RouteCallRule implements Rule {
 
-	private ObjectType $controllerType;
-
 	public function getNodeType() : string {
-		return StaticCall::class;
+		return FuncCall::class;
 	}
 
 	public function processNode(Node $node, Scope $scope) : array {
-		if (!($node->name instanceof Identifier) || $node->name->name !== 'route') {
+		if (!($node->name instanceof Name) || $node->name->toLowerString() !== 'route') {
 			return [];
-		}
-
-		if ($node->class instanceof FullyQualified) {
-			$className = $node->class->toString();
-		}
-		else {
-			$className = $scope->resolveName($node->class);
-		}
-		$this->controllerType ??= new ObjectType(Controller::class);
-		if (!$this->controllerType->isSuperTypeOf(new ObjectType($className))->yes()) {
-			return [];
-		}
-
-		if ($node->class->toString() !== 'App\Services\Http\AppController') {
-			return [
-				RuleErrorBuilder::message('route() must always be called on AppController')
-					->identifier('rudie.RouteCallRule')
-					->build(),
-			];
 		}
 
 		$argExprs = $node->args;
