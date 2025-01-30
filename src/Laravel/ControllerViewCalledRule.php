@@ -47,7 +47,7 @@ final class ControllerViewCalledRule implements Rule {
 		$viewNameArg = $node->args[0]->value;
 		if (!$this->isAcceptableViewName($viewNameArg)) {
 			yield RuleErrorBuilder::message("View name must be a string, or a method call, not a " . get_class($viewNameArg) . ".")
-				->identifier('rudie.ControllerViewCalledRule')
+				->identifier('rudie.ControllerViewCalledRule.viewName')
 				->build();
 		}
 
@@ -65,7 +65,7 @@ final class ControllerViewCalledRule implements Rule {
 		$paramsItems = $this->getViewParamsArray($paramsArg);
 		if ($paramsItems === null) {
 			yield RuleErrorBuilder::message("View args must be an array.")
-				->identifier('rudie.ControllerViewCalledRule')
+				->identifier('rudie.ControllerViewCalledRule.viewArgs')
 				->build();
 		}
 		if (count($paramsItems) == 0) {

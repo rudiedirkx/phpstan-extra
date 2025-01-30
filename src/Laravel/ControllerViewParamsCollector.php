@@ -39,7 +39,6 @@ final class ControllerViewParamsCollector implements Collector {
 			// Ignore messages
 		}
 		$vars = $paramsValuesGenerator->getReturn();
-// dump($vars);
 
 		return $vars;
 	}

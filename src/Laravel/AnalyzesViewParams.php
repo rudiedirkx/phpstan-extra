@@ -25,13 +25,16 @@ trait AnalyzesViewParams {
 
 	/**
 	 * @param list<ArrayItem> $items
-	 * @return Generator<int, string|RuleError, *, (array<string, string>|array<string, Type>)>
+	 * @return Generator<int, RuleError, *, array<string, ($stringTypes is true ? string : Type)>>
 	 */
 	protected function getViewParamsValues(array $items, Scope $scope, bool $stringTypes) : Generator {
 		$vars = [];
 		foreach ($items as $i => $item) {
 			if (!($item->key instanceof String_)) {
-				yield "View arg $i must have a string key.";
+				yield RuleErrorBuilder::message("View arg $i must have a string key.")
+					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.viewArgKey')
+					->build();
 				continue;
 			}
 			$keyName = $item->key->value;
@@ -39,6 +42,7 @@ trait AnalyzesViewParams {
 			if (!$this->isAcceptableParam($item->value, $scope)) {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is too complex (%s).", $keyName, get_class($item->value)))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.complexity')
 					->build();
 			}
 
@@ -50,31 +54,37 @@ trait AnalyzesViewParams {
 			if (str_contains($valueTypeString, '&iterable<')) {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is an unclear iterable: '%s'.", $keyName, $valueTypeString))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.unclearIterable')
 					->build();
 			}
 			elseif (str_contains($valueTypeString, 'Illuminate\Database\Eloquent\Collection')) {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is an unclear collection: '%s'.", $keyName, $valueTypeString))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.unclearCollection')
 					->build();
 			}
 			elseif (str_contains($valueTypeString, 'Illuminate\Database\Eloquent\Model')) {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is an unclear model: '%s'.", $keyName, $valueTypeString))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.unclearModel')
 					->build();
 			}
 			elseif ($valueTypeString === 'object') {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is 'object'.", $keyName))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.unclearObject')
 					->build();
 			}
 			elseif (preg_match('#\b(mixed)\b#', $valueTypeString, $match) && $valueTypeString !== $match[1]) {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is/contains %s: '%s'.", $keyName, $match[1], $valueTypeString))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.mixed')
 					->build();
 			}
 			elseif (preg_match('#\barray(?![<\{])#', $valueTypeString, $match)) {
 				yield RuleErrorBuilder::message(sprintf("View arg '%s' is/contains untyped array: '%s'.", $keyName, $valueTypeString))
 					->line($item->getStartLine())
+					->identifier('rudie.ControllerViewCalledRule.array')
 					->build();
 			}
 		}
