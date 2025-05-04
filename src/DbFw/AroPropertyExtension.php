@@ -12,8 +12,6 @@ use PHPStan\Reflection\ClassReflection;
 use PHPStan\Reflection\PropertiesClassReflectionExtension;
 use PHPStan\Reflection\PropertyReflection;
 use PHPStan\Type\MixedType;
-use rdx\PhpstanExtra\DbFw\SchemaFieldDefinition;
-use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
 

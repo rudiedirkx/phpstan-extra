@@ -6,7 +6,6 @@ $finder = (new PhpCsFixer\Finder())
 	]);
 
 return (new PhpCsFixer\Config())
-	->setCacheFile('/tmp/php-cs-fixer-iresfw')
 	->setUsingCache(false)
 	->setRules([
 		'no_unused_imports' => true,

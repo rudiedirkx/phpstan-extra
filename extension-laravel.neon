@@ -27,6 +27,9 @@ services:
 		class: rdx\PhpstanExtra\Laravel\ControllerViewCalledRule
 		tags: [phpstan.rules.rule]
 	-
+		class: rdx\PhpstanExtra\Laravel\ControllerViewFirstRule
+		tags: [phpstan.rules.rule]
+	-
 		class: rdx\PhpstanExtra\Laravel\ControllerViewParamsCollector
 		tags: [phpstan.collector]
 	-
