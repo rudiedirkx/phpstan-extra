@@ -43,6 +43,10 @@ services:
 		class: rdx\PhpstanExtra\Php\ImplicitlyNullParametersRule
 		tags: [phpstan.rules.rule]
 
+	# -
+	# 	class: rdx\PhpstanExtra\Php\NoToStringConversionRule
+	# 	tags: [phpstan.rules.rule]
+
 	-
 		class: rdx\PhpstanExtra\Php\RoundReturnTypeExtension
 		tags: [phpstan.broker.expressionTypeResolverExtension]
