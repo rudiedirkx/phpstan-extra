@@ -1,6 +1,8 @@
 parameters:
 	rdx_laravel:
 		controllerActionMaxLines: 50
+		phpTranslationStrictness: 0
+		twigTranslationStrictness: 0
 
 services:
 	-
@@ -36,7 +38,22 @@ services:
 		class: rdx\PhpstanExtra\Laravel\ControllerViewParamsAggregateRule
 		tags: [phpstan.rules.rule]
 
+	-
+		class: rdx\PhpstanExtra\Laravel\TranslationValidator
+	-
+		class: rdx\PhpstanExtra\Laravel\TransCallRule
+		arguments:
+			strictness: %rdx_laravel.phpTranslationStrictness%
+		tags: [phpstan.rules.rule]
+	-
+		class: rdx\PhpstanExtra\Laravel\TwigTranslationRule
+		arguments:
+			strictness: %rdx_laravel.twigTranslationStrictness%
+		tags: [phpstan.rules.rule]
+
 parametersSchema:
 	rdx_laravel: structure([
 		controllerActionMaxLines: int()
+		phpTranslationStrictness: int()
+		twigTranslationStrictness: int()
 	])
