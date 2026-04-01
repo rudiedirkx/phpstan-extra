@@ -1,5 +1,6 @@
 parameters:
 	rdx_php:
+		toStringConversion: false
 		errorSuppressionEnabled: true
 		errorSuppressionAllowFunctionCall: true
 		unusedVariablesEnabled: true
@@ -44,14 +45,23 @@ services:
 		tags: [phpstan.rules.rule]
 
 	-
+		class: rdx\PhpstanExtra\Php\NoToStringConversionRule
+		# tags: [phpstan.rules.rule]
+
+	-
 		class: rdx\PhpstanExtra\Php\RoundReturnTypeExtension
 		tags: [phpstan.broker.expressionTypeResolverExtension]
 
 	errorFormatter.byfile:
 		class: rdx\PhpstanExtra\Php\ByFileErrorFormatter
 
+conditionalTags:
+	rdx\PhpstanExtra\Php\NoToStringConversionRule:
+		phpstan.rules.rule: %rdx_php.toStringConversion%
+
 parametersSchema:
 	rdx_php: structure([
+		toStringConversion: bool()
 		errorSuppressionEnabled: bool()
 		errorSuppressionAllowFunctionCall: bool()
 		unusedVariablesEnabled: bool()
