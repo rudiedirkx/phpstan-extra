@@ -112,11 +112,17 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 		if ($node instanceof Foreach_) {
 			// Because of loopDepth, add the source var explicitly
 			$varName = $this->getVarName($node->expr);
-			$this->addEncounter(self::USE, $varName);
+			$this->addEncounter(self::USE, $varName, 'foreach source');
+
+			// And the key var
+			if ($node->keyVar) {
+				$this->addEncounter(self::DEFINE, $this->getVarName($node->keyVar), 'foreach key');
+				$this->skipVars[] = $node->keyVar;
+			}
 
 			$this->loopDepth++;
 
-			$this->skipVars[] = $node->keyVar;
+			// But ignore the mandatory value var
 			$this->skipVars[] = $node->valueVar;
 			return null;
 		}
@@ -128,7 +134,7 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 
 		if ($node instanceof Variable) {
 			$varName = $this->getVarName($node);
-			$this->addEncounter(self::USE, $varName);
+			$this->addEncounter(self::USE, $varName, 'variable');
 		}
 
 		return null;
@@ -181,10 +187,10 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 		}, $this->encounters);
 	}
 
-	private function addEncounter(string $type, ?string $varName) : void {
+	private function addEncounter(string $type, ?string $varName, string $debug = '') : void {
 		if (!$varName) return;
 
-		// echo "      $type \$$varName (",  $this->line, ")\n";
+		// echo "      $type \$$varName (",  $this->line, ") $debug\n";
 
 		if ($this->loopDepth > 0 && $type == self::DEFINE) return;
 
