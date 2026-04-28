@@ -12,6 +12,9 @@ $removePropsIfNested = function($obj, $out, $stub, $isNested) : array {
 };
 
 $casters = [
+	// BR
+	'Framework\Console\Commands\CompileModels\SchemaParser' => $removePropsIfNested,
+
 	// Laravel
 	'Illuminate\Contracts\Container\Container' => $removePropsIfNested,
 	'Illuminate\Routing\RouteCollection' => $removePropsIfNested,
@@ -38,19 +41,21 @@ $casters = [
 	'PHPStan\BetterReflection\Reflector\DefaultReflector' => $removePropsIfNested,
 	'PHPStan\BetterReflection\SourceLocator\Located\LocatedSource' => $removePropsIfNested,
 	'PHPStan\DependencyInjection\MemoizingContainer' => $removePropsIfNested,
+	'PHPStan\DependencyInjection\Reflection\LazyClassReflectionExtensionRegistryProvider' => $removePropsIfNested,
 	'PHPStan\Node\Printer\ExprPrinter' => $removePropsIfNested,
 	'PHPStan\Parser\CachedParser' => $removePropsIfNested,
 	'PHPStan\Parser\CleaningParser' => $removePropsIfNested,
 	'PHPStan\PhpDoc\PhpDocInheritanceResolver' => $removePropsIfNested,
 	'PHPStan\PhpDoc\ResolvedPhpDocBlock' => $removePropsIfNested,
 	'PHPStan\PhpDoc\StubPhpDocProvider' => $removePropsIfNested,
+	'PHPStan\Reflection\ClassReflectionFactory' => $removePropsIfNested,
 	'PHPStan\Reflection\InitializerExprTypeResolver' => $removePropsIfNested,
 	// 'PHPStan\Reflection\MethodsClassReflectionExtension' => $removePropsIfNested,
 	'PHPStan\Reflection\Php\NativeBuiltinMethodReflection' => $removePropsIfNested,
 	// 'PHPStan\Reflection\PropertiesClassReflectionExtension' => $removePropsIfNested,
 	'PHPStan\Reflection\ReflectionProvider\MemoizingReflectionProvider' => $removePropsIfNested,
 	'PHPStan\Reflection\SignatureMap\Php8SignatureMapProvider' => $removePropsIfNested,
-	// 'PHPStan\Reflection\Php\PhpClassReflectionExtension' => $removePropsIfNested,
+	'PHPStan\Reflection\Php\PhpClassReflectionExtension' => $removePropsIfNested,
 	'PHPStan\Type\DynamicReturnTypeExtensionRegistry' => $removePropsIfNested,
 	'PHPStan\Type\FileTypeMapper' => $removePropsIfNested,
 	'PHPStan\Reflection\ClassReflection' => function($obj, array $out) : array {

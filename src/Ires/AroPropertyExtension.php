@@ -124,6 +124,7 @@ final class AroPropertyExtension implements PropertiesClassReflectionExtension {
 		}
 
 		return new AnnotationPropertyReflection( // @phpstan-ignore phpstanApi.constructor
+			$propertyName,
 			$classReflection,
 			readableType: $type,
 			writableType: $type,

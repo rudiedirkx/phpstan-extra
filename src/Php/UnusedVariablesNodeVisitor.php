@@ -44,7 +44,10 @@ final class UnusedVariablesNodeVisitor extends NodeVisitorAbstract {
 		private bool $debug,
 	) {}
 
-	public function enterNode(Node $node) { // @phpstan-ignore return.unusedType
+	/**
+	 * @return null|int
+	 */
+	public function enterNode(Node $node) {
 		$this->depth++;
 		$this->line = $node->getStartLine();
 

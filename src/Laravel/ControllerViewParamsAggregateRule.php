@@ -20,7 +20,7 @@ final class ControllerViewParamsAggregateRule implements Rule {
 		$allVars = $node->get(ControllerViewParamsCollector::class);
 
 		$types = [];
-		foreach ($allVars as $file => $paramsArrays) {
+		foreach ($allVars as $paramsArrays) {
 			foreach ($paramsArrays as $vars) {
 				foreach ($vars as $name => $type) {
 					$types[] = $type;

@@ -21,6 +21,10 @@ services:
 		tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
 
 	-
+		class: rdx\PhpstanExtra\Laravel\EloquentCollectionPluckExtension
+		tags: [phpstan.broker.dynamicMethodReturnTypeExtension]
+
+	-
 		class: rdx\PhpstanExtra\Laravel\ControllerActionSizeRule
 		tags: [phpstan.rules.rule]
 		arguments:
