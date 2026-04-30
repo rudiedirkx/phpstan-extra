@@ -1,6 +1,7 @@
 parameters:
 	rdx_php:
 		toStringConversion: false
+		strictClosures: true
 		errorSuppressionEnabled: true
 		errorSuppressionAllowFunctionCall: true
 		unusedVariablesEnabled: true
@@ -45,12 +46,18 @@ services:
 		tags: [phpstan.rules.rule]
 
 	-
-		class: rdx\PhpstanExtra\Php\NoToStringConversionRule
-		# tags: [phpstan.rules.rule]
-
-	-
 		class: rdx\PhpstanExtra\Php\RoundReturnTypeExtension
 		tags: [phpstan.broker.expressionTypeResolverExtension]
+
+	# Conditional rules
+	-
+		class: rdx\PhpstanExtra\Php\NoToStringConversionRule
+	-
+		class: rdx\PhpstanExtra\Php\ClosureParamTypesRule
+	-
+		class: rdx\PhpstanExtra\Php\ReturnTypeClosureRule
+	-
+		class: rdx\PhpstanExtra\Php\ParamTypeClosureRule
 
 	errorFormatter.byfile:
 		class: rdx\PhpstanExtra\Php\ByFileErrorFormatter
@@ -58,10 +65,17 @@ services:
 conditionalTags:
 	rdx\PhpstanExtra\Php\NoToStringConversionRule:
 		phpstan.rules.rule: %rdx_php.toStringConversion%
+	rdx\PhpstanExtra\Php\ClosureParamTypesRule:
+		phpstan.rules.rule: %rdx_php.strictClosures%
+	rdx\PhpstanExtra\Php\ReturnTypeClosureRule:
+		phpstan.rules.rule: %rdx_php.strictClosures%
+	rdx\PhpstanExtra\Php\ParamTypeClosureRule:
+		phpstan.rules.rule: %rdx_php.strictClosures%
 
 parametersSchema:
 	rdx_php: structure([
 		toStringConversion: bool()
+		strictClosures: bool()
 		errorSuppressionEnabled: bool()
 		errorSuppressionAllowFunctionCall: bool()
 		unusedVariablesEnabled: bool()
