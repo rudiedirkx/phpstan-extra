@@ -61,6 +61,8 @@ services:
 
 	errorFormatter.byfile:
 		class: rdx\PhpstanExtra\Php\ByFileErrorFormatter
+	errorFormatter.byerror:
+		class: rdx\PhpstanExtra\Php\ByErrorErrorFormatter
 
 conditionalTags:
 	rdx\PhpstanExtra\Php\NoToStringConversionRule:
