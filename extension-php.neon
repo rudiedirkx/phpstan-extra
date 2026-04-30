@@ -58,6 +58,8 @@ services:
 		class: rdx\PhpstanExtra\Php\ReturnTypeClosureRule
 	-
 		class: rdx\PhpstanExtra\Php\ParamTypeClosureRule
+	-
+		class: rdx\PhpstanExtra\Php\PropertyTypeClosureRule
 
 	errorFormatter.byfile:
 		class: rdx\PhpstanExtra\Php\ByFileErrorFormatter
@@ -72,6 +74,8 @@ conditionalTags:
 	rdx\PhpstanExtra\Php\ReturnTypeClosureRule:
 		phpstan.rules.rule: %rdx_php.strictClosures%
 	rdx\PhpstanExtra\Php\ParamTypeClosureRule:
+		phpstan.rules.rule: %rdx_php.strictClosures%
+	rdx\PhpstanExtra\Php\PropertyTypeClosureRule:
 		phpstan.rules.rule: %rdx_php.strictClosures%
 
 parametersSchema:
