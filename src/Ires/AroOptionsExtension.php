@@ -26,6 +26,7 @@ final class AroOptionsExtension implements DynamicFunctionReturnTypeExtension {
 
 		$objectsArg = $functionCall->args[0];
 		$objectsType = $scope->getType($objectsArg->value);
+		$objectsType = TypeCombinator::removeNull($objectsType);
 
 		$arrays = $objectsType->getArrays();
 		if (count($arrays) != 1) {
