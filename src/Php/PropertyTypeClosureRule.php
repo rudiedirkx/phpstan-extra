@@ -3,44 +3,40 @@
 namespace rdx\PhpstanExtra\Php;
 
 use PhpParser\Node;
+use PhpParser\Node\PropertyItem;
 use PHPStan\Analyser\Scope;
-use PHPStan\Node\InClassNode;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * @implements Rule<InClassNode>
+ * @implements Rule<PropertyItem>
  */
 final class PropertyTypeClosureRule implements Rule {
 
 	use AnalyzesClosureType;
 
 	public function getNodeType() : string {
-		return InClassNode::class;
+		return PropertyItem::class;
 	}
 
 	public function processNode(Node $node, Scope $scope) : array {
-		$classRefl = $node->getClassReflection();
+		$classRefl = $scope->getClassReflection();
 
-		$errors = [];
+		$propertyName = $node->name->name;
+		if (!$classRefl->hasProperty($propertyName)) return [];
 
-		foreach ($classRefl->getNativeReflection()->getProperties() as $tempPropertyRefl) {
-			$propertyName = $tempPropertyRefl->getName();
-			if (!$classRefl->hasProperty($propertyName)) continue;
+		$propertyRefl = $classRefl->getProperty($propertyName, $scope);
+		if ($propertyRefl->getDeclaringClass() !== $classRefl) return [];
 
-			$propertyRefl = $classRefl->getProperty($propertyName, $scope);
-			if ($propertyRefl->getDeclaringClass() !== $classRefl) continue;
+		$propertyType = $propertyRefl->getReadableType();
 
-			$propertyType = $propertyRefl->getReadableType();
+		if (!$this->typeLacksClosureDetails($propertyType)) return [];
 
-			if (!$this->typeLacksClosureDetails($propertyType)) continue;
-
-			$errors[] = RuleErrorBuilder::message(sprintf('Property $%s type Closure must include input & output details.', $propertyName))
+		return [
+			RuleErrorBuilder::message(sprintf('Property $%s type Closure must include input & output details.', $propertyName))
 				->identifier('rudie.PropertyTypeClosureRule')
-				->build();
-		}
-
-		return $errors;
+				->build(),
+		];
 	}
 
 }
