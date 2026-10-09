@@ -3,53 +3,58 @@
 namespace rdx\PhpstanExtra\Php;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\PropertyFetch;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\InterpolatedStringPart;
 use PhpParser\Node\Scalar\InterpolatedString;
-use PhpParser\NodeFinder;
 use PHPStan\Analyser\Scope;
-use PHPStan\File\FileReader;
-use PHPStan\Node\FileNode;
+use PHPStan\Node\Printer\ExprPrinter;
 use PHPStan\Rules\Rule;
 use PHPStan\Rules\RuleErrorBuilder;
 
 /**
- * @implements Rule<FileNode>
+ * @implements Rule<InterpolatedString>
  */
 final class CurlyInterpolationRule implements Rule {
 
+	public function __construct(
+		protected ExprPrinter $exprPrinter,
+	) {}
+
 	public function getNodeType() : string {
-		return FileNode::class;
+		return InterpolatedString::class;
 	}
 
 	public function processNode(Node $node, Scope $scope) : array {
-		$code = FileReader::read($scope->getFile());
-
-		$nodeFinder = new NodeFinder();
-		$strings = $nodeFinder->findInstanceOf($node->getNodes(), InterpolatedString::class);
-
 		$errors = [];
-		foreach ($strings as $string) {
-			foreach ($string->parts as $part) {
-				if ($part instanceof InterpolatedStringPart) {
-					continue;
-				}
-
-				$start = $part->getStartFilePos() - 1;
-				if ($code[$start] !== '{') {
-					continue;
-				}
-
-				$length = $part->getEndFilePos() - $start + 2;
-				$source = substr($code, $start, $length);
-
-				$errors[] = RuleErrorBuilder::message("String interpolation $source is not allowed. Use sprintf().")
-					->identifier('rudie.CurlyInterpolationRule')
-					->line($part->getStartLine())
-					->build();
+		foreach ($node->parts as $part) {
+			if ($part instanceof InterpolatedStringPart || $this->isSimple($part)) {
+				continue;
 			}
+
+			$source = $this->exprPrinter->printExpr($part);
+
+			$errors[] = RuleErrorBuilder::message(sprintf('String interpolation {%s} is not allowed. Use sprintf().', $source))
+				->identifier('rudie.CurlyInterpolationRule')
+				->line($part->getStartLine())
+				->build();
 		}
 
 		return $errors;
+	}
+
+	protected function isSimple(Expr $expr) : bool {
+		if ($expr instanceof Variable) {
+			return true;
+		}
+
+		if ($expr instanceof PropertyFetch) {
+			return $expr->var instanceof Variable && $expr->name instanceof Identifier;
+		}
+
+		return false;
 	}
 
 }
