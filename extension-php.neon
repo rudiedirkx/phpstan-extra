@@ -7,6 +7,7 @@ parameters:
 		unusedVariablesEnabled: true
 		foreachByReferenceValueEnabled: true
 		staticFunctionVariablesEnabled: true
+		curlyInterpolation: true
 
 services:
 	-
@@ -60,6 +61,8 @@ services:
 		class: rdx\PhpstanExtra\Php\ParamTypeClosureRule
 	-
 		class: rdx\PhpstanExtra\Php\PropertyTypeClosureRule
+	-
+		class: rdx\PhpstanExtra\Php\CurlyInterpolationRule
 
 	errorFormatter.byfile:
 		class: rdx\PhpstanExtra\Php\ByFileErrorFormatter
@@ -77,6 +80,8 @@ conditionalTags:
 		phpstan.rules.rule: %rdx_php.strictClosures%
 	rdx\PhpstanExtra\Php\PropertyTypeClosureRule:
 		phpstan.rules.rule: %rdx_php.strictClosures%
+	rdx\PhpstanExtra\Php\CurlyInterpolationRule:
+		phpstan.rules.rule: %rdx_php.curlyInterpolation%
 
 parametersSchema:
 	rdx_php: structure([
@@ -87,4 +92,5 @@ parametersSchema:
 		unusedVariablesEnabled: bool()
 		foreachByReferenceValueEnabled: bool()
 		staticFunctionVariablesEnabled: bool()
+		curlyInterpolation: bool()
 	])
