@@ -47,6 +47,10 @@ services:
 		tags: [phpstan.rules.rule]
 
 	-
+		class: rdx\PhpstanExtra\Php\NullArrayKeyRule
+		tags: [phpstan.rules.rule]
+
+	-
 		class: rdx\PhpstanExtra\Php\RoundReturnTypeExtension
 		tags: [phpstan.broker.expressionTypeResolverExtension]
 
